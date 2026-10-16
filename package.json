@@ -1,0 +1,40 @@
+{
+  "name": "spindle",
+  "productName": "Spindle",
+  "version": "0.0.0",
+  "description": "Your installed PC games on a shelf, as discs, cases or save disks.",
+  "main": "main.js",
+  "author": "Ben",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable --x64",
+    "dist:folder": "electron-builder --win dir --x64"
+  },
+  "devDependencies": {
+    "electron": "^43.7.11",
+    "electron-builder": "26.0.12"
+  },
+  "build": {
+    "appId": "com.ben.spindle",
+    "productName": "Spindle",
+    "icon": "build-icon.ico",
+    "files": [
+      "main.js",
+      "preload.js",
+      "scanner.js",
+      "renderer/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "portable",
+      "icon": "build-icon.ico"
+    },
+    "portable": {
+      "artifactName": "Spindle-${version}-portable.exe"
+    },
+    "directories": {
+      "output": "dist"
+    }
+  }
+}

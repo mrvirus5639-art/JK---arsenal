@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' file: data: https:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'">
+  <title>Spindle</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-mode="case">
+  <div id="bg"><div class="bg-layer" id="bgA"></div><div class="bg-layer" id="bgB"></div></div>
+
+  <header class="top">
+    <div class="brand"><span class="brand-mark"></span>SPINDLE</div>
+    <nav class="filters" id="filters" aria-label="Library"></nav>
+    <label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Search" spellcheck="false" autocomplete="off"><kbd>/</kbd></label>
+    <div class="seg" id="modes" role="radiogroup" aria-label="Display style">
+      <button data-mode="disc" title="Discs (1)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.2"/></svg><span>Disc</span></button>
+      <button data-mode="case" title="Cases (2)"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M8 3v18"/></svg><span>Case</span></button>
+      <button data-mode="save" title="Save disks (3)"><svg viewBox="0 0 24 24"><path d="M4 4h13l3 3v13H4z"/><path d="M8 4v5h7V4"/><rect x="7" y="13" width="10" height="7"/></svg><span>Save</span></button>
+    </div>
+    <select id="sort" aria-label="Sort">
+      <option value="recent">Recently played</option>
+      <option value="name">A–Z</option>
+      <option value="size">Size on disk</option>
+      <option value="source">Store</option>
+    </select>
+    <div class="menu-wrap">
+      <button class="icon-btn" id="menuBtn" aria-label="More" title="More">
+        <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button>
+      <div class="menu" id="menu" hidden></div>
+    </div>
+  </header>
+
+  <section class="hero" id="hero">
+    <div class="hero-obj" id="heroObj"></div>
+    <div class="hero-info">
+      <div class="hero-src" id="heroSrc"></div>
+      <h1 id="heroTitle"></h1>
+      <div class="hero-meta" id="heroMeta"></div>
+      <div class="hero-actions">
+        <button class="btn play" id="playBtn"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>Play</button>
+        <button class="btn" id="folderBtn" title="Open install folder">Folder</button>
+        <button class="btn" id="coverBtn" title="Use your own cover image">Cover…</button>
+        <button class="btn" id="renameBtn">Rename</button>
+        <button class="btn" id="hideBtn">Hide</button>
+        <button class="btn danger" id="removeBtn" hidden>Remove</button>
+      </div>
+    </div>
+  </section>
+
+  <main class="shelf" id="grid" tabindex="-1"></main>
+  <div class="empty" id="empty" hidden>
+    <div class="empty-disc"></div>
+    <h2>No games on the shelf yet</h2>
+    <p>Spindle reads Steam, Epic Games and GOG installs on its own. For other games, point it at the folder that holds them, or add a single .exe.</p>
+    <div><button class="btn play" data-act="add-folder">Add a games folder</button> <button class="btn" data-act="add-game">Add one .exe</button> <button class="btn" data-act="rescan">Scan again</button></div>
+  </div>
+
+  <footer class="hints" id="hints"></footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
