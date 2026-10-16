@@ -1,8 +1,8 @@
 {
   "name": "spindle",
   "productName": "Spindle",
-  "version": "0.0.0",
-  "description": "Your installed PC games on a shelf, as discs, cases or save disks.",
+  "version": "0.1.0",
+  "description": "Your installed games, local movies and music on a shelf, as discs, cases or save disks.",
   "main": "main.js",
   "author": "Ben",
   "license": "MIT",
@@ -23,6 +23,7 @@
       "main.js",
       "preload.js",
       "scanner.js",
+      "media.js",
       "renderer/**/*",
       "package.json"
     ],
@@ -36,5 +37,8 @@
     "directories": {
       "output": "dist"
     }
+  },
+  "dependencies": {
+    "music-metadata": "11.16.1"
   }
 }

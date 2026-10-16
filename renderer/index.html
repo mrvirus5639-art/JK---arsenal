@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' file: data: https:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' file: data: https:; style-src 'self' 'unsafe-inline'; script-src 'self'; media-src 'self' file:; connect-src 'self'">
   <title>Spindle</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -10,7 +10,12 @@
   <div id="bg"><div class="bg-layer" id="bgA"></div><div class="bg-layer" id="bgB"></div></div>
 
   <header class="top">
-    <div class="brand"><span class="brand-mark"></span>SPINDLE</div>
+    <div class="brand"><span class="brand-mark"></span>SPINDLE<small id="ver"></small></div>
+    <div class="libs" id="libs" role="tablist" aria-label="Library">
+      <button data-lib="games" class="on"><svg viewBox="0 0 24 24"><rect x="2.5" y="7" width="19" height="11" rx="5.5"/><path d="M7.5 11v3M6 12.5h3"/><circle cx="15.5" cy="11.5" r=".9"/><circle cx="17.5" cy="13.8" r=".9"/></svg>Games</button>
+      <button data-lib="movies"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M7 5l2 4M12 5l2 4M17 5l2 4"/></svg>Movies</button>
+      <button data-lib="music"><svg viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></svg>Music</button>
+    </div>
     <nav class="filters" id="filters" aria-label="Library"></nav>
     <label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="q" type="search" placeholder="Search" spellcheck="false" autocomplete="off"><kbd>/</kbd></label>
@@ -19,12 +24,7 @@
       <button data-mode="case" title="Cases (2)"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M8 3v18"/></svg><span>Case</span></button>
       <button data-mode="save" title="Save disks (3)"><svg viewBox="0 0 24 24"><path d="M4 4h13l3 3v13H4z"/><path d="M8 4v5h7V4"/><rect x="7" y="13" width="10" height="7"/></svg><span>Save</span></button>
     </div>
-    <select id="sort" aria-label="Sort">
-      <option value="recent">Recently played</option>
-      <option value="name">A–Z</option>
-      <option value="size">Size on disk</option>
-      <option value="source">Store</option>
-    </select>
+    <select id="sort" aria-label="Sort"></select>
     <div class="menu-wrap">
       <button class="icon-btn" id="menuBtn" aria-label="More" title="More">
         <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button>
@@ -40,6 +40,7 @@
       <div class="hero-meta" id="heroMeta"></div>
       <div class="hero-actions">
         <button class="btn play" id="playBtn"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>Play</button>
+        <button class="btn" id="shuffleBtn" hidden>Shuffle</button>
         <button class="btn" id="folderBtn" title="Open install folder">Folder</button>
         <button class="btn" id="coverBtn" title="Use your own cover image">Cover…</button>
         <button class="btn" id="renameBtn">Rename</button>
@@ -47,16 +48,31 @@
         <button class="btn danger" id="removeBtn" hidden>Remove</button>
       </div>
     </div>
+    <div class="hero-list" id="heroList"></div>
   </section>
 
   <main class="shelf" id="grid" tabindex="-1"></main>
   <div class="empty" id="empty" hidden>
     <div class="empty-disc"></div>
-    <h2>No games on the shelf yet</h2>
-    <p>Spindle reads Steam, Epic Games and GOG installs on its own. For other games, point it at the folder that holds them, or add a single .exe.</p>
-    <div><button class="btn play" data-act="add-folder">Add a games folder</button> <button class="btn" data-act="add-game">Add one .exe</button> <button class="btn" data-act="rescan">Scan again</button></div>
+    <h2 id="emptyTitle"></h2>
+    <p id="emptyText"></p>
+    <small id="emptyFolders"></small>
+    <div><button class="btn play" data-act="add-folder">Add a folder</button> <button class="btn" data-act="add-game" id="emptyAddGame">Add one .exe</button> <button class="btn" data-act="rescan">Scan again</button></div>
   </div>
 
+  <div class="player" id="player" hidden>
+    <button class="p-art" id="pArt" title="Show album"></button>
+    <div class="p-meta"><b id="pTitle"></b><span id="pSub"></span></div>
+    <div class="p-ctl">
+      <button id="pShuffle" title="Shuffle"><svg viewBox="0 0 24 24"><path d="M3 7h3c4 0 6 10 10 10h4M3 17h3c1.6 0 2.8-1.6 3.9-3.6M14 8.4C15 7.6 15.6 7 17 7h3M18 4l3 3-3 3M18 14l3 3-3 3"/></svg></button>
+      <button id="pPrev" title="Previous (,)"><svg viewBox="0 0 24 24"><path d="M6 5v14M19 5 9 12l10 7z"/></svg></button>
+      <button id="pPlay" class="big" title="Play / pause (Space)"><svg class="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg><svg class="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></button>
+      <button id="pNext" title="Next (.)"><svg viewBox="0 0 24 24"><path d="M18 5v14M5 5l10 7-10 7z"/></svg></button>
+      <button id="pStop" title="Stop"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg></button>
+    </div>
+    <div class="p-seek"><input type="range" id="pSeek" min="0" max="1000" value="0" aria-label="Seek"><span id="pTime">0:00 / 0:00</span></div>
+    <label class="p-vol" title="Volume"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zM16.5 8.5a5 5 0 0 1 0 7"/></svg><input type="range" id="pVol" min="0" max="1" step="0.01" value="0.8" aria-label="Volume"></label>
+  </div>
   <footer class="hints" id="hints"></footer>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="app.js"></script>
