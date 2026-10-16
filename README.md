@@ -1,7 +1,7 @@
 SPINDLE 0.1 — your games, movies and music on a shelf
 ======================================================
 
-Built the same way as Cartridge: an Electron app (Chromium + Node.js).
+An Electron app (Chromium + Node.js).
 Three separate libraries — Games, Movies, Music — switched with the tabs at
 the top (Ctrl + Tab, Alt + 1/2/3, or LT/RT on a controller).
 Everything is shown as a spinning DISC, a CASE with the disc sliding out, or
